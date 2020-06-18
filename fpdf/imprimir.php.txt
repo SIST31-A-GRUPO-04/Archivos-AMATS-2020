@@ -1,0 +1,60 @@
+<?php
+require_once 'conexion.php';
+include 'miencript.php';
+session_start();
+require('fpdf/fpdf.php');
+
+class PDF extends FPDF
+{
+function Header()
+{
+
+    // Arial bold 15
+    $this->SetFont('Arial','B',15);
+    // Movernos a la derecha
+    $this->Cell(60);
+    // Título
+    $this->Cell(70,10,'LISTA DE VEHICULOS',1,0,'C');
+    // Salto de línea
+    $this->Ln(20);
+
+    $this->cell(90,10,'USUARIOS',1,0,'c',0);
+    $this->cell(90,10,'TIPO DE USUARIOS',1,1,'c',0);
+}
+
+// Pie de página
+function Footer()
+{
+    // Posición: a 1,5 cm del final
+    $this->SetY(-15);
+    // Arial italic 8
+    $this->SetFont('Arial','I',8);
+    // Número de página
+    $this->Cell(0,10,utf8_decode('Pagina ').$this->PageNo().'/{nb}',0,0,'C');
+
+}
+}
+
+
+
+$sqltab="SELECT * FROM usuarios";
+  $restab=$link->query($sqltab);
+
+$pdf=new PDF();
+$pdf->AliasNbPages();
+$pdf->AddPage();
+$pdf->SetFont('Arial','',12);
+
+while ($puestab=$restab->fetch_assoc()) {
+
+$pdf->cell(90,10,$puestab['usuario'],1,0,'c',0);
+$pdf->cell(90,10,$puestab['tipo_usuario'],1,1,'c',0);
+
+}
+$pdf->Output();
+
+
+?>
+$pdf->cell(60,10,$puestab['email'],1,2,'c',0);
+$pdf->cell(60,10,$puestab['telefono'],1,3,'c',0);
+$pdf->cell(60,10,$puestab['producto'],1,4,'c',0);
